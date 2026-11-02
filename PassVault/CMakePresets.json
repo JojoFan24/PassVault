@@ -2,30 +2,23 @@
   "version": 6,
   "configurePresets": [
     {
-      "name": "debug",
-      "displayName": "Debug",
-      "binaryDir": "${sourceDir}/build/debug",
-      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+      "name": "xcode",
+      "displayName": "Xcode project",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build/xcode"
     },
     {
       "name": "asan",
-      "displayName": "Debug + Sanitizers",
-      "inherits": "debug",
+      "displayName": "Terminal build with sanitizers",
       "binaryDir": "${sourceDir}/build/asan",
       "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer"
       }
-    },
-    {
-      "name": "release",
-      "displayName": "Release",
-      "binaryDir": "${sourceDir}/build/release",
-      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
     }
   ],
   "buildPresets": [
-    { "name": "debug", "configurePreset": "debug" },
-    { "name": "asan", "configurePreset": "asan" },
-    { "name": "release", "configurePreset": "release" }
+    { "name": "xcode", "configurePreset": "xcode" },
+    { "name": "asan", "configurePreset": "asan" }
   ]
 }
