@@ -17,21 +17,19 @@ constexpr std::string_view kUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 constexpr std::string_view kDigits = "0123456789";
 constexpr std::string_view kSymbols = "!@#$%^&*()-_=+[]{};:,.?";
 
-std::string random_string(std::string_view alphabet, std::size_t length) {
+void fill_random(SecureBuffer& buffer, std::string_view alphabet) {
     const auto upper = static_cast<uint32_t>(alphabet.size());
+    char* out = buffer.chars();
 
-    std::string result;
-    result.reserve(length);
-    for (std::size_t i = 0; i < length; ++i) {
-        result += alphabet[randombytes_uniform(upper)];
+    for (std::size_t i = 0; i < buffer.size(); ++i) {
+        out[i] = alphabet[randombytes_uniform(upper)];
     }
-    return result;
 }
 
-bool contains_every_set(const std::string& candidate,
+bool contains_every_set(std::string_view candidate,
                         const std::vector<std::string_view>& required_sets) {
     for (const std::string_view set : required_sets) {
-        if (candidate.find_first_of(set) == std::string::npos) {
+        if (candidate.find_first_of(set) == std::string_view::npos) {
             return false;
         }
     }
@@ -40,12 +38,12 @@ bool contains_every_set(const std::string& candidate,
 
 }  // namespace
 
-std::string generate_password(const GeneratorOptions& options) {
+SecureBuffer generate_password(const GeneratorOptions& options) {
     std::vector<std::string_view> required_sets;
     if (options.lowercase) required_sets.push_back(kLowercase);
     if (options.uppercase) required_sets.push_back(kUppercase);
-    if (options.digits)    required_sets.push_back(kDigits);
-    if (options.symbols)   required_sets.push_back(kSymbols);
+    if (options.digits) required_sets.push_back(kDigits);
+    if (options.symbols) required_sets.push_back(kSymbols);
 
     if (required_sets.empty()) {
         throw std::invalid_argument("at least one character set must be enabled");
@@ -61,13 +59,12 @@ std::string generate_password(const GeneratorOptions& options) {
         alphabet += set;
     }
 
-    while (true) {
-        std::string candidate = random_string(alphabet, options.length);
-        if (contains_every_set(candidate, required_sets)) {
-            return candidate;
-        }
-        sodium_memzero(candidate.data(), candidate.size());
-    }
+    SecureBuffer password(options.length);
+    do {
+        fill_random(password, alphabet);
+    } while (!contains_every_set(password.view(), required_sets));
+
+    return password;
 }
 
 }  // namespace passvault

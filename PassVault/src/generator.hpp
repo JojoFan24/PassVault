@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <string>
 
+#include "secure_buffer.hpp"
+
 namespace passvault {
 
 struct GeneratorOptions {
@@ -14,6 +16,6 @@ struct GeneratorOptions {
     bool symbols = true;
 };
 
-std::string generate_password(const GeneratorOptions& options);
+SecureBuffer generate_password(const GeneratorOptions& options);
 
 }  // namespace passvault

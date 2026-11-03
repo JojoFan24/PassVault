@@ -11,6 +11,8 @@ set(PASSVAULT_SOURCES
     src/main.cpp
     src/generator.hpp
     src/generator.cpp
+    src/secure_buffer.hpp
+    src/secure_buffer.cpp
 )
 
 add_executable(passvault ${PASSVAULT_SOURCES})
@@ -21,7 +23,7 @@ target_compile_options(passvault PRIVATE -Wall -Wextra -Wpedantic)
 
 set_target_properties(passvault PROPERTIES
     XCODE_GENERATE_SCHEME ON
-    XCODE_SCHEME_ARGUMENTS "help"
+    XCODE_SCHEME_ARGUMENTS "generate"
     XCODE_SCHEME_ADDRESS_SANITIZER ON
     XCODE_SCHEME_UNDEFINED_BEHAVIOUR_SANITIZER ON
 )

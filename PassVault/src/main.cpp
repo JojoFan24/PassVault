@@ -12,7 +12,7 @@
 
 namespace {
 
-constexpr const char* kVersion = "0.2.0";
+constexpr const char* kVersion = "0.3.0";
 constexpr std::size_t kMinLength = 1;
 constexpr std::size_t kMaxLength = 1024;
 
@@ -76,7 +76,8 @@ int run_generate(const Args& args) {
         }
     }
 
-    std::cout << passvault::generate_password(options) << "\n";
+    const passvault::SecureBuffer password = passvault::generate_password(options);
+    std::cout << password.view() << "\n";
     return 0;
 }
 
